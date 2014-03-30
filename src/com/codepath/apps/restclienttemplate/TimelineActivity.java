@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import eu.erikw.PullToRefreshListView;
 
 public class TimelineActivity extends ActionBarActivity {
+
+    private static final int COMPOSE_REQ_CODE = 432;
 
     private ArrayList<Tweet> mTweets = new ArrayList<Tweet>();
     private TweetAdapter mAdapter;
@@ -80,11 +83,7 @@ public class TimelineActivity extends ActionBarActivity {
 
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonTweet = response.getJSONObject(i);
-                        Tweet newTweet = new Tweet();
-                        newTweet.createdAt = jsonTweet.getString("created_at");
-                        newTweet.postedBy = jsonTweet.getJSONObject("user").getString("screen_name");
-                        newTweet.postedByPicture = jsonTweet.getJSONObject("user").getString("profile_image_url_https");
-                        newTweet.text = jsonTweet.getString("text");
+                        Tweet newTweet = new Tweet(jsonTweet);
                         mTweets.add(newTweet);
                         if (i == response.length() - 1) {
                             mLastId = jsonTweet.getString("id_str");
@@ -112,10 +111,21 @@ public class TimelineActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_compose) {
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivityForResult(intent, COMPOSE_REQ_CODE);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int rc, int result, Intent data) {
+        // TODO Auto-generated method stub
+        if (rc == COMPOSE_REQ_CODE && result == RESULT_OK && data != null) {
+            Tweet t = (Tweet) data.getSerializableExtra(ComposeActivity.EXTRA_TWEET);
+            mTweets.add(0, t);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 }

@@ -37,7 +37,7 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        boolean isLastRow = position == getCount() - 1;
+        boolean isLastRow = position == super.getCount();
         if (convertView == null || (!isLastRow && convertView.getClass() != RelativeLayout.class)) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_tweet, parent, false);
         } else if (convertView == null || (isLastRow && convertView.getClass() != LinearLayout.class)) {
@@ -59,17 +59,18 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
             Date now = new Date();
             long diff = now.getTime() - timePosted.getTime();
             long diffDays = diff / (24 * 60 * 60 * 1000);
-            long diffSeconds = diff / 1000 % 60;
-            long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffSeconds = diff / 1000 % 60;
+
             if (diffDays > 0) {
                 tvPostedAt.setText(diffDays + " " + (diffDays == 1 ? "day" : "days") + " ago");
             } else if (diffHours > 0) {
-                tvPostedAt.setText(diffHours + " " + (diffDays == 1 ? "hour" : "hours") + " ago");
+                tvPostedAt.setText(diffHours + " " + (diffHours == 1 ? "hour" : "hours") + " ago");
             } else if (diffMinutes > 0) {
-                tvPostedAt.setText(diffMinutes + " " + (diffDays == 1 ? "minute" : "minutes") + " ago");
+                tvPostedAt.setText(diffMinutes + " " + (diffMinutes == 1 ? "minute" : "minutes") + " ago");
             } else {
-                tvPostedAt.setText(diffSeconds + " " + (diffDays == 1 ? "second" : "seconds") + " ago");
+                tvPostedAt.setText(diffSeconds + " " + (diffSeconds == 1 ? "second" : "seconds") + " ago");
             }
 
         } catch (ParseException e) {
