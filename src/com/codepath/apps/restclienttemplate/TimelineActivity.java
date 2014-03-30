@@ -10,15 +10,18 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.AbsListView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import eu.erikw.PullToRefreshListView;
 
 public class TimelineActivity extends ActionBarActivity {
 
     private ArrayList<Tweet> mTweets = new ArrayList<Tweet>();
     private TweetAdapter mAdapter;
     private String mLastId;
+    private PullToRefreshListView mLv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +29,33 @@ public class TimelineActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timeline);
 
         mAdapter = new TweetAdapter(this, mTweets);
-        ListView lv = (ListView) findViewById(R.id.lvTweets);
-        lv.setAdapter(mAdapter);
+        mLv = (PullToRefreshListView) findViewById(R.id.lvTweets);
+        mLv.setAdapter(mAdapter);
+        mLv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // TODO Auto-generated method stub
+                if (mLastId != null) {
+                    int scrolledThroughItems = firstVisibleItem + visibleItemCount;
+                    if (scrolledThroughItems == mTweets.size()) {
+                        getTimeline();
+                    }
+                }
+            }
+        });
+        mLv.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                mLastId = null;
+                getTimeline();
+            }
+        });
+        mLv.setRefreshing();
         getTimeline();
     }
 
@@ -39,12 +67,17 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onFailure(Throwable arg0) {
                 // TODO Auto-generated method stub
-                System.out.println("failure" + arg0);
+                mLv.onRefreshComplete();
+                System.out.println("failure: " + arg0.toString());
             }
 
             @Override
             public void onSuccess(JSONArray response) {
                 try {
+                    if (mLastId == null) {
+                        mLv.onRefreshComplete();
+                    }
+
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonTweet = response.getJSONObject(i);
                         Tweet newTweet = new Tweet();
@@ -59,7 +92,7 @@ public class TimelineActivity extends ActionBarActivity {
                     }
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
-
+                    mLv.onRefreshComplete();
                 }
             }
         }, mLastId);

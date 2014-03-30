@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class TweetAdapter extends ArrayAdapter<Tweet> {
@@ -23,11 +25,29 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Tweet tweet = getItem(position);
+    public int getCount() {
+        // TODO Auto-generated method stub
+        int count = super.getCount();
+        if (count > 0) {
+            count += 1;
+        }
+        return count;
+    }
 
-        if (convertView == null) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        boolean isLastRow = position == getCount() - 1;
+        if (convertView == null || (!isLastRow && convertView.getClass() != RelativeLayout.class)) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_tweet, parent, false);
+        } else if (convertView == null || (isLastRow && convertView.getClass() != LinearLayout.class)) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_tweet, parent, false);
+        }
+        Tweet tweet = null;
+        if (isLastRow) {
+            return convertView;
+        } else {
+            tweet = getItem(position);
         }
 
         final AsyncImageView ivPostedBy = (AsyncImageView) convertView.findViewById(R.id.ivPostedBy);
@@ -43,16 +63,15 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
             long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000) % 24;
             if (diffDays > 0) {
-                tvPostedAt.setText("%d " + (diffDays == 1 ? "day" : "days") + " ago");
+                tvPostedAt.setText(diffDays + " " + (diffDays == 1 ? "day" : "days") + " ago");
             } else if (diffHours > 0) {
-                tvPostedAt.setText("%d " + (diffDays == 1 ? "hour" : "hours") + " ago");
+                tvPostedAt.setText(diffHours + " " + (diffDays == 1 ? "hour" : "hours") + " ago");
             } else if (diffMinutes > 0) {
-                tvPostedAt.setText("%d " + (diffDays == 1 ? "minute" : "minutes") + " ago");
+                tvPostedAt.setText(diffMinutes + " " + (diffDays == 1 ? "minute" : "minutes") + " ago");
             } else {
-                tvPostedAt.setText("%d " + (diffDays == 1 ? "second" : "seconds") + " ago");
+                tvPostedAt.setText(diffSeconds + " " + (diffDays == 1 ? "second" : "seconds") + " ago");
             }
 
-            tvPostedAt.setText(sf.parse(tweet.createdAt).toString());
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
