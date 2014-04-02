@@ -6,12 +6,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -72,10 +74,10 @@ public class TimelineActivity extends ActionBarActivity {
             mTweets.clear();
         }
         mLoadingId = mLastId;
+        final Context c = this;
         TwitterClient.getRestClient().getTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onFailure(Throwable arg0) {
-                // TODO Auto-generated method stub
                 mLv.onRefreshComplete();
                 mLoadingId = null;
                 System.out.println("failure: " + arg0.toString());
@@ -88,12 +90,24 @@ public class TimelineActivity extends ActionBarActivity {
             }
 
             @Override
+            protected void handleFailureMessage(Throwable arg0, String message) {
+                try {
+                    JSONObject obj = new JSONObject(message);
+                    Toast.makeText(c, obj.getJSONArray("errors").getJSONObject(0).getString("message"),
+                            Toast.LENGTH_LONG).show();
+
+                } catch (JSONException e) {
+                    Toast.makeText(c, "Error making request", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
             public void onSuccess(JSONArray response) {
                 try {
                     if (mLastId == null) {
                         mLv.onRefreshComplete();
                         // clear any self-tweets that were showing
-                        // mTweets.clear();
+                        mTweets.clear();
                     }
 
                     for (int i = 0; i < response.length(); i++) {
