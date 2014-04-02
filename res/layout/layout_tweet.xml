@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
     
-    <com.codepath.apps.restclienttemplate.AsyncImageView 
+    <com.codepath.twitterclient.AsyncImageView 
         android:id="@+id/ivPostedBy"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"

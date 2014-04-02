@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import eu.erikw.PullToRefreshListView;
@@ -21,9 +22,13 @@ public class TimelineActivity extends ActionBarActivity {
 
     private static final int COMPOSE_REQ_CODE = 432;
 
+    private static final String SIS_LAST_ID = "SIS_LAST_ID";
+    private static final String SIS_TWEETS = "SIS_TWEETS";
+
     private ArrayList<Tweet> mTweets = new ArrayList<Tweet>();
     private TweetAdapter mAdapter;
     private String mLastId;
+    private String mLoadingId;
     private PullToRefreshListView mLv;
 
     @Override
@@ -42,7 +47,7 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 // TODO Auto-generated method stub
-                if (mLastId != null) {
+                if (mLastId != null && mLastId != mLoadingId) {
                     int scrolledThroughItems = firstVisibleItem + visibleItemCount;
                     if (scrolledThroughItems == mTweets.size()) {
                         getTimeline();
@@ -66,12 +71,20 @@ public class TimelineActivity extends ActionBarActivity {
         if (mLastId == null) {
             mTweets.clear();
         }
-        RestClientApp.getRestClient().getTimeline(new JsonHttpResponseHandler() {
+        mLoadingId = mLastId;
+        TwitterClient.getRestClient().getTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onFailure(Throwable arg0) {
                 // TODO Auto-generated method stub
                 mLv.onRefreshComplete();
+                mLoadingId = null;
                 System.out.println("failure: " + arg0.toString());
+            }
+
+            @Override
+            public void onFinish() {
+                mLoadingId = null;
+                mLv.onRefreshComplete();
             }
 
             @Override
@@ -79,6 +92,8 @@ public class TimelineActivity extends ActionBarActivity {
                 try {
                     if (mLastId == null) {
                         mLv.onRefreshComplete();
+                        // clear any self-tweets that were showing
+                        // mTweets.clear();
                     }
 
                     for (int i = 0; i < response.length(); i++) {
@@ -86,12 +101,14 @@ public class TimelineActivity extends ActionBarActivity {
                         Tweet newTweet = new Tweet(jsonTweet);
                         mTweets.add(newTweet);
                         if (i == response.length() - 1) {
-                            mLastId = jsonTweet.getString("id_str");
+                            mLastId = Long.valueOf(Long.parseLong(jsonTweet.getString("id_str")) - 1).toString();
                         }
                     }
                     mAdapter.notifyDataSetChanged();
+                    mLoadingId = null;
                 } catch (JSONException e) {
                     mLv.onRefreshComplete();
+                    mLoadingId = null;
                 }
             }
         }, mLastId);

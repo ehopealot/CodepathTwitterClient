@@ -1,9 +1,11 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import com.codepath.apps.restclienttemplate.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import android.content.Context;
 
@@ -15,13 +15,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  *     // use client to send requests to API
  *     
  */
-public class RestClientApp extends com.activeandroid.app.Application {
+public class TwitterClient extends com.activeandroid.app.Application {
     private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        RestClientApp.context = this;
+        TwitterClient.context = this;
 
         // Create global configuration and initialize ImageLoader with this
         // configuration
@@ -33,6 +33,6 @@ public class RestClientApp extends com.activeandroid.app.Application {
     }
 
     public static RestClient getRestClient() {
-        return (RestClient) RestClient.getInstance(RestClient.class, RestClientApp.context);
+        return (RestClient) RestClient.getInstance(RestClient.class, TwitterClient.context);
     }
 }

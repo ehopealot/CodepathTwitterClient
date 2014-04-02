@@ -1,10 +1,11 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.oauth.OAuthLoginActivity;
 
 public class LoginActivity extends OAuthLoginActivity<RestClient> {

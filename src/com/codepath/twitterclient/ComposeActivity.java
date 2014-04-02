@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ComposeActivity extends ActionBarActivity {
 
     public static final String EXTRA_TWEET = "EXTRA_TWEET";
 
+    private static final String SIS_TWEET_IN_PROGRESS = "SIS_TWEET_IN_PROGRESS";
     private View mOverlay;
 
     @Override
@@ -24,12 +26,24 @@ public class ComposeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         mOverlay = findViewById(R.id.pbOverlay);
+        if (savedInstanceState != null) {
+            ((EditText) findViewById(R.id.etCompose)).setText(savedInstanceState.getString(SIS_TWEET_IN_PROGRESS));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // TODO Auto-generated method stub
+        String tweet = ((EditText) findViewById(R.id.etCompose)).getText().toString();
+
+        outState.putString(SIS_TWEET_IN_PROGRESS, tweet);
+        super.onSaveInstanceState(outState);
     }
 
     public void onSendTweet(View v) {
         String tweet = ((EditText) findViewById(R.id.etCompose)).getText().toString();
         mOverlay.setVisibility(View.VISIBLE);
-        RestClientApp.getRestClient().postTweet(new JsonHttpResponseHandler() {
+        TwitterClient.getRestClient().postTweet(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(JSONObject arg0) {
                 mOverlay.setVisibility(View.GONE);

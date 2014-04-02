@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.twitterclient;
 
 import android.content.Context;
 import android.graphics.Bitmap;
