@@ -36,7 +36,14 @@ public class RestClient extends OAuthBaseClient {
     // CHANGE THIS
     // DEFINE METHODS for different API endpoints here
     public void getTimeline(AsyncHttpResponseHandler handler, String maxId) {
-        String apiUrl = getApiUrl("statuses/home_timeline.json");
+        getContent(handler, getApiUrl("statuses/home_timeline.json"), maxId);
+    }
+
+    public void getMentions(AsyncHttpResponseHandler handler, String maxId) {
+        getContent(handler, getApiUrl("statuses/mentions_timeline.json"), maxId);
+    }
+
+    public void getContent(AsyncHttpResponseHandler handler, String apiUrl, String maxId) {
         // Can specify query string params directly or through RequestParams.
         RequestParams params = new RequestParams();
         if (maxId != null) {

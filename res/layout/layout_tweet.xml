@@ -15,7 +15,8 @@
     <TextView
         android:id="@+id/tvPostedBy"
         android:layout_alignLeft="@+id/ivPostedBy"
-        android:layout_below="@+id/ivPostedBy" 
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/ivPostedBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp" />
