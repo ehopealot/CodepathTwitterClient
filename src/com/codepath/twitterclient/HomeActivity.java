@@ -40,6 +40,15 @@ public class HomeActivity extends ActionBarActivity {
                         new FragmentTabListener<MentionsFragment>(R.id.container, this, "mentions",
                                 MentionsFragment.class));
         actionBar.addTab(tab2);
+
+        Tab tab3 = actionBar
+                .newTab()
+                .setText("Profile")
+                .setTag("ProfileFragment")
+                .setTabListener(
+                        new FragmentTabListener<CurrentUserProfileFragment>(R.id.container, this, "profile",
+                                CurrentUserProfileFragment.class));
+        actionBar.addTab(tab3);
     }
 
     @Override
@@ -92,13 +101,17 @@ public class HomeActivity extends ActionBarActivity {
 
         /* The following are each of the ActionBar.TabListener callbacks */
 
+        protected Fragment instantiateFragment() {
+            return Fragment.instantiate(mActivity, mClass.getName());
+        }
+
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
             FragmentTransaction sft = mActivity.getSupportFragmentManager().beginTransaction();
             // Check if the fragment is already initialized
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
-                mFragment = Fragment.instantiate(mActivity, mClass.getName());
+                mFragment = instantiateFragment();
                 sft.add(mfragmentContainerId, mFragment, mTag);
             } else {
                 // If it exists, simply attach it in order to show it

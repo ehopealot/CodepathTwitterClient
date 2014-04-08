@@ -7,7 +7,7 @@ public class MentionsFragment extends ContentFragment {
     @Override
     protected void getContent(AsyncHttpResponseHandler handler, String lastId) {
         // TODO Auto-generated method stub
-        TwitterClient.getRestClient().getMentions(handler, lastId);
+        TwitterClient.getRestClient().getMentions(handler, lastId, null);
     }
 
     @Override

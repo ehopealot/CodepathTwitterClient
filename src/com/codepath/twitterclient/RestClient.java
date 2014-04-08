@@ -35,19 +35,34 @@ public class RestClient extends OAuthBaseClient {
 
     // CHANGE THIS
     // DEFINE METHODS for different API endpoints here
-    public void getTimeline(AsyncHttpResponseHandler handler, String maxId) {
-        getContent(handler, getApiUrl("statuses/home_timeline.json"), maxId);
+    public void getUser(AsyncHttpResponseHandler handler, String screenName) {
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        String apiUrl = getApiUrl("users/show.json");
+        client.get(apiUrl, params, handler);
     }
 
-    public void getMentions(AsyncHttpResponseHandler handler, String maxId) {
-        getContent(handler, getApiUrl("statuses/mentions_timeline.json"), maxId);
+    public void getCurrentUser(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        client.get(apiUrl, new RequestParams(), handler);
     }
 
-    public void getContent(AsyncHttpResponseHandler handler, String apiUrl, String maxId) {
+    public void getTimeline(AsyncHttpResponseHandler handler, String maxId, String screenName) {
+        getContent(handler, getApiUrl("statuses/home_timeline.json"), maxId, screenName);
+    }
+
+    public void getMentions(AsyncHttpResponseHandler handler, String maxId, String screenName) {
+        getContent(handler, getApiUrl("statuses/mentions_timeline.json"), maxId, screenName);
+    }
+
+    public void getContent(AsyncHttpResponseHandler handler, String apiUrl, String maxId, String screenName) {
         // Can specify query string params directly or through RequestParams.
         RequestParams params = new RequestParams();
         if (maxId != null) {
             params.put("max_id", maxId);
+        }
+        if (screenName != null) {
+            params.put("screen_name", screenName);
         }
         params.put("format", "json");
         client.get(apiUrl, params, handler);
