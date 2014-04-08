@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.codepath.apps.restclienttemplate.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

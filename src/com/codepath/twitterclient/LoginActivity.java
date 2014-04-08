@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.codepath.oauth.OAuthLoginActivity;
 
 public class LoginActivity extends OAuthLoginActivity<RestClient> {
@@ -27,7 +26,7 @@ public class LoginActivity extends OAuthLoginActivity<RestClient> {
     // i.e Display application "homepage"
     @Override
     public void onLoginSuccess() {
-        Intent i = new Intent(this, TimelineActivity.class);
+        Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();
     }

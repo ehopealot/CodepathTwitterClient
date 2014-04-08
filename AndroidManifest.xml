@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.codepath.apps.restclienttemplate"
+    package="com.codepath.twitterclient"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -43,20 +43,18 @@
                     android:scheme="oauth" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name="com.codepath.twitterclient.TimelineActivity"
-            android:label="@string/title_activity_timeline"
+            android:name="com.codepath.twitterclient.ComposeActivity"
+            android:label="Compose"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            android:label="@string/title_activity_compose" >
         </activity>
         <activity
-            android:label="Compose"
-            android:name="com.codepath.twitterclient.ComposeActivity"
-                        android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:name="com.codepath.twitterclient.HomeActivity"
+            android:label="Twitter" 
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
             
-            android:label="@string/title_activity_compose" >
         </activity>
     </application>
 

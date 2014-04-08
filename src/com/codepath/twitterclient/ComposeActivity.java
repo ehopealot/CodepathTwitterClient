@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ComposeActivity extends ActionBarActivity {
