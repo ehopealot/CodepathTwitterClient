@@ -13,6 +13,16 @@ import android.view.MenuItem;
 
 public class HomeActivity extends ActionBarActivity {
 
+    private static final String SELECTED_TAB = "SELECTED_TAB";
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // TODO Auto-generated method stub
+
+        outState.putInt(SELECTED_TAB, (Integer) getSupportActionBar().getSelectedNavigationIndex());
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +31,6 @@ public class HomeActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(true);
-
         Tab tab = actionBar
                 .newTab()
                 .setText("Timeline")
@@ -30,7 +39,6 @@ public class HomeActivity extends ActionBarActivity {
                         new FragmentTabListener<TimelineFragment>(R.id.container, this, "timeline",
                                 TimelineFragment.class));
         actionBar.addTab(tab);
-        actionBar.selectTab(tab);
 
         Tab tab2 = actionBar
                 .newTab()
@@ -49,6 +57,19 @@ public class HomeActivity extends ActionBarActivity {
                         new FragmentTabListener<CurrentUserProfileFragment>(R.id.container, this, "profile",
                                 CurrentUserProfileFragment.class));
         actionBar.addTab(tab3);
+
+        if (savedInstanceState != null) {
+            int tabIndex = savedInstanceState.getInt(SELECTED_TAB);
+            if (tabIndex == 2) {
+                actionBar.selectTab(tab3);
+            } else if (tabIndex == 1) {
+                actionBar.selectTab(tab2);
+            } else {
+                actionBar.selectTab(tab);
+            }
+        } else {
+            actionBar.selectTab(tab);
+        }
     }
 
     @Override
@@ -112,7 +133,7 @@ public class HomeActivity extends ActionBarActivity {
             if (mFragment == null) {
                 // If not, instantiate and add it to the activity
                 mFragment = instantiateFragment();
-                sft.add(mfragmentContainerId, mFragment, mTag);
+                sft.replace(mfragmentContainerId, mFragment, mTag);
             } else {
                 // If it exists, simply attach it in order to show it
                 sft.attach(mFragment);

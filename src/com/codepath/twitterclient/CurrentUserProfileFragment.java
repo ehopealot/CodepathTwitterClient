@@ -8,4 +8,5 @@ public class CurrentUserProfileFragment extends ProfileFragment {
     protected void getUserData(AsyncHttpResponseHandler handler) {
         TwitterClient.getRestClient().getCurrentUser(handler);
     }
+
 }

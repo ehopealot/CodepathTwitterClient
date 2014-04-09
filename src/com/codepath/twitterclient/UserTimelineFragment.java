@@ -36,4 +36,9 @@ public class UserTimelineFragment extends ContentFragment {
         return R.menu.user_timeline;
     }
 
+    @Override
+    protected boolean getShouldLaunchProfileActivites() {
+        return false;
+    }
+
 }

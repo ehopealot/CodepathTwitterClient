@@ -43,7 +43,6 @@
                     android:scheme="oauth" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.codepath.twitterclient.ComposeActivity"
             android:label="Compose"
@@ -52,9 +51,14 @@
         </activity>
         <activity
             android:name="com.codepath.twitterclient.HomeActivity"
-            android:label="Twitter" 
+            android:label="Twitter"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+        </activity>
+        <activity
+            android:name="com.codepath.twitterclient.ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
             
+            android:label="@string/title_activity_profile" >
         </activity>
     </application>
 

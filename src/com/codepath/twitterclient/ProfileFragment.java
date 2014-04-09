@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,11 @@ public class ProfileFragment extends Fragment {
     private TextView mTagline;
     private TextView mNumFollowing;
     private TextView mNumFollowers;
+    private TextView mScreenName;
     private AsyncImageView mProfilePic;
+    private View mLoadingView;
+
+    private Handler mHandler = new Handler();
 
     public ProfileFragment() {
 
@@ -38,13 +43,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        mLoadingView = v.findViewById(R.id.loadingLayout);
+        mProfilePic = (AsyncImageView) v.findViewById(R.id.ivPostedBy);
+        mScreenName = (TextView) v.findViewById(R.id.tvScreenName);
         if (getArguments() != null) {
             mUser = (User) getArguments().getSerializable(ARG_USER);
             if (mUser != null) {
                 mProfilePic.setUrl(mUser.imageUrl);
+                mScreenName.setText(mUser.screenName);
             }
         }
-        mProfilePic = (AsyncImageView) v.findViewById(R.id.ivPostedBy);
 
         mNumFollowers = (TextView) v.findViewById(R.id.tvNumFollowers);
         mNumFollowing = (TextView) v.findViewById(R.id.tvNumTweets);
@@ -56,21 +64,35 @@ public class ProfileFragment extends Fragment {
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
         final Context c = getActivity();
+        mLoadingView.setVisibility(View.VISIBLE);
         getUserData(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int arg0, JSONObject arg1) {
+
                 try {
                     mUser = new User(arg1);
                     mNumFollowers.setText("Followers: " + mUser.numFollowers);
                     mNumFollowing.setText("Following: " + mUser.numFollowing);
                     mTagline.setText(mUser.tagline);
                     mProfilePic.setUrl(mUser.imageUrl);
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.tweets, UserTimelineFragment.newInstance(mUser.screenName)).commit();
+                    mScreenName.setText(mUser.screenName);
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.tweets, UserTimelineFragment.newInstance(mUser.screenName)).commit();
+
+                        };
+                    });
+
                 } catch (JSONException e) {
                     Toast.makeText(c, e.toString(), Toast.LENGTH_LONG).show();
-
+                    mLoadingView.setVisibility(View.GONE);
                 }
+            }
+
+            @Override
+            public void onFinish() {
+                mLoadingView.setVisibility(View.GONE);
             }
 
             @Override
@@ -83,6 +105,7 @@ public class ProfileFragment extends Fragment {
                 } catch (JSONException e) {
                     Toast.makeText(c, "Error making request", Toast.LENGTH_LONG).show();
                 }
+                mLoadingView.setVisibility(View.GONE);
             }
 
         });

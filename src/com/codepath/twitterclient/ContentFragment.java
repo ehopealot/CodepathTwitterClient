@@ -77,11 +77,15 @@ public abstract class ContentFragment extends Fragment {
         return v;
     }
 
+    protected boolean getShouldLaunchProfileActivites() {
+        return true;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        mAdapter = new TweetAdapter(getActivity(), mTweets);
+        mAdapter = new TweetAdapter(getActivity(), mTweets, getShouldLaunchProfileActivites());
         mLv.setAdapter(mAdapter);
         getTimeline();
 

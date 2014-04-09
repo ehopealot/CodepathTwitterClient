@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,12 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
     final String TWITTER = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
     final SimpleDateFormat sf = new SimpleDateFormat(TWITTER);
 
-    public TweetAdapter(Context context, List<Tweet> objects) {
+    final boolean mLaunchProfileActivities;
+
+    public TweetAdapter(Context context, List<Tweet> objects, boolean launchProfileActivites) {
         super(context, R.layout.layout_tweet, objects);
         sf.setLenient(true);
+        mLaunchProfileActivities = launchProfileActivites;
     }
 
     @Override
@@ -43,12 +47,10 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         } else if (convertView == null || (isLastRow && convertView.getClass() != LinearLayout.class)) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_tweet, parent, false);
         }
-        Tweet tweet = null;
         if (isLastRow) {
             return convertView;
-        } else {
-            tweet = getItem(position);
         }
+        final Tweet tweet = getItem(position);
 
         final AsyncImageView ivPostedBy = (AsyncImageView) convertView.findViewById(R.id.ivPostedBy);
         TextView tvPostedBy = (TextView) convertView.findViewById(R.id.tvPostedBy);
@@ -80,7 +82,20 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         TextView text = (TextView) convertView.findViewById(R.id.tvTweet);
         text.setText(tweet.text);
         ivPostedBy.setUrl(tweet.postedByPicture);
+        if (mLaunchProfileActivities) {
+            ivPostedBy.setOnClickListener(new View.OnClickListener() {
 
+                @Override
+                public void onClick(View v) {
+                    User user = new User();
+                    user.screenName = tweet.postedBy;
+                    user.imageUrl = tweet.postedByPicture;
+                    Intent i = new Intent(getContext(), ProfileActivity.class);
+                    i.putExtra(ProfileActivity.EXTRA_USER, user);
+                    getContext().startActivity(i);
+                }
+            });
+        }
         return convertView;
     }
 }

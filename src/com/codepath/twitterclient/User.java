@@ -12,6 +12,10 @@ public class User implements Serializable {
     public String imageUrl;
     public String tagline;
 
+    public User() {
+
+    }
+
     public User(JSONObject userJSON) throws JSONException {
         numFollowing = Long.toString(userJSON.getLong("friends_count"));
         numFollowers = Long.toString(userJSON.getLong("followers_count"));

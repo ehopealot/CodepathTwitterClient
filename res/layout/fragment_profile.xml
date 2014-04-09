@@ -8,22 +8,30 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
+        <TextView
+            android:id="@+id/tvScreenName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp" />
         <com.codepath.twitterclient.AsyncImageView
             android:id="@+id/ivPostedBy"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
             android:layout_margin="10dp"
             android:adjustViewBounds="true"
+            android:layout_below="@+id/tvScreenName"
             android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/tvTagline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/ivPostedBy"
+            android:layout_below="@+id/tvScreenName"
+            
             android:layout_margin="10dp" />
 
         <TextView
@@ -41,15 +49,35 @@
             android:layout_alignBaseline="@+id/tvNumFollowers"
             android:layout_margin="10dp"
             android:layout_toRightOf="@+id/tvNumFollowers" />
+	    <RelativeLayout
+	        android:id="@+id/loadingLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="100dp"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentLeft="true"
+	        android:visibility="gone"
+	        >
+	        <ProgressBar 
+	            android:layout_centerHorizontal="true"
+	            android:layout_centerVertical="true"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            />
+	    </RelativeLayout>
 
     </RelativeLayout>
+        <View
+            android:id="@+id/vSeparator"
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_below="@+id/headerContent"
+            android:background="#000000" />
     <FrameLayout 
         android:id="@+id/tweets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/headerContent"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="10dp" />
+        android:layout_below="@+id/vSeparator"
+        android:layout_alignParentLeft="true" />
     
 
 </RelativeLayout>
