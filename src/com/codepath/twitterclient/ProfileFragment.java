@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,9 +79,12 @@ public class ProfileFragment extends Fragment {
                     mScreenName.setText(mUser.screenName);
                     mHandler.post(new Runnable() {
                         public void run() {
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.tweets, UserTimelineFragment.newInstance(mUser.screenName)).commit();
-
+                            FragmentManager m = getFragmentManager();
+                            if (m != null) {
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.tweets, UserTimelineFragment.newInstance(mUser.screenName))
+                                        .commit();
+                            }
                         };
                     });
 
