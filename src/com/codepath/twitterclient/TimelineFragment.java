@@ -15,4 +15,10 @@ public class TimelineFragment extends ContentFragment {
         // TODO Auto-generated method stub
         return R.menu.timeline;
     }
+
+    @Override
+    protected boolean getShouldInsertNewTweet() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

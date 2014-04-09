@@ -20,8 +20,8 @@ public class UserTimelineFragment extends ContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
         mScreenName = getArguments().getString(ARG_USER_ID);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

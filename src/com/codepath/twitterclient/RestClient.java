@@ -44,11 +44,15 @@ public class RestClient extends OAuthBaseClient {
 
     public void getCurrentUser(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("account/verify_credentials.json");
-        client.get(apiUrl, new RequestParams(), handler);
+        client.get(apiUrl, null, handler);
     }
 
     public void getTimeline(AsyncHttpResponseHandler handler, String maxId, String screenName) {
-        getContent(handler, getApiUrl("statuses/home_timeline.json"), maxId, screenName);
+        if (screenName == null) {
+            getContent(handler, getApiUrl("statuses/home_timeline.json"), maxId, screenName);
+        } else {
+            getContent(handler, getApiUrl("statuses/user_timeline.json"), maxId, screenName);
+        }
     }
 
     public void getMentions(AsyncHttpResponseHandler handler, String maxId, String screenName) {

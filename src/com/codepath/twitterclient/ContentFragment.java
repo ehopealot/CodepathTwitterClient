@@ -170,10 +170,14 @@ public abstract class ContentFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    protected boolean getShouldInsertNewTweet() {
+        return false;
+    }
+
     @Override
     public void onActivityResult(int rc, int result, Intent data) {
         // TODO Auto-generated method stub
-        if (rc == COMPOSE_REQ_CODE && result == Activity.RESULT_OK && data != null) {
+        if (rc == COMPOSE_REQ_CODE && result == Activity.RESULT_OK && data != null && getShouldInsertNewTweet()) {
             Tweet t = (Tweet) data.getSerializableExtra(ComposeActivity.EXTRA_TWEET);
             mTweets.add(0, t);
             mAdapter.notifyDataSetChanged();
