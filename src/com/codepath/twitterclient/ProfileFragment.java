@@ -80,6 +80,11 @@ public class ProfileFragment extends Fragment {
                     mHandler.post(new Runnable() {
                         public void run() {
                             FragmentManager m = getFragmentManager();
+                            // hax, was having trouble with child fragment
+                            // manager
+                            // and saw that if you just defer adding a child
+                            // fragment you
+                            // can add it using the regular fragment manager
                             if (m != null) {
                                 getFragmentManager().beginTransaction()
                                         .replace(R.id.tweets, UserTimelineFragment.newInstance(mUser.screenName))
